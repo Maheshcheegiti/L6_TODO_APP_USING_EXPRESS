@@ -1,0 +1,87 @@
+<div class="center">
+    <div>
+        <div class="addtask">
+            <div><input type="text" placeholder="What's next?"></div>
+            <div><input type="date"></div>
+            <div><button class="btn">Add</button></div>
+        </div>
+        <div>
+        <h2>Overdue</h2>
+        <div class="card">
+            <% 
+                var overdueCount = 0;
+    
+                for (var i = 0; i < todos.length; i++) {
+                    var dueDate = new Date(todos[i].dueDate);
+                    var currentDate = new Date();
+        
+                    if (dueDate < currentDate) {
+                        overdueCount++;
+            %>
+                <div class="box">
+                    <div><input type="checkbox"></div>
+                    <div><%= todos[i].title %></div>
+                    <div><i class="fa-solid fa-trash"></i></div>
+                </div>
+            <% 
+                    }
+                } 
+            %>
+        </div>
+        
+        <p>Number of Overdue Todos: <%= overdueCount %></p>
+    
+        <h2>Due Today</h2>
+        <div class="card">
+        
+            <% 
+                var todayCount = 0;
+    
+                for (var i = 0; i < todos.length; i++) {
+                    var dueDate = new Date(todos[i].dueDate);
+                    var currentDate = new Date();
+        
+                    if (dueDate.toDateString() === currentDate.toDateString()) {
+                        todayCount++;
+            %>
+            <div class="box">
+                <div><input type="checkbox"></div>
+                <div><%= todos[i].title %></div>
+                <div><i class="fa-solid fa-trash"></i></div>
+            </div>
+            <% 
+                    }
+                } 
+            %>
+            </div>
+        
+        <p>Number of Todos Due Today: <%= todayCount %></p>
+    
+        <h2>Due Later</h2>
+        <div class="card">
+          
+            <% 
+                var laterCount = 0;
+    
+                for (var i = 0; i < todos.length; i++) {
+                    var dueDate = new Date(todos[i].dueDate);
+                    var currentDate = new Date();
+        
+                    if (dueDate > currentDate) {
+                        laterCount++;
+            %>
+            <div class="box">
+                <div><input type="checkbox"></div>
+                <div><%= todos[i].title %></div>
+                <div><i class="fa-solid fa-trash"></i></div>
+            </div>
+            <% 
+                    }
+                } 
+            %>
+        </div>
+        
+        <p>Number of Todos Due Later: <%= laterCount %></p>
+        </div>
+    </div>
+</div>

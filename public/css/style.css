@@ -1,4 +1,68 @@
 body{
-    color: grey;
-    font-family: 'Courier New', Courier, monospace;
+    width: 100vw;
+    height: 100vh;
+    font-family: cursive;
+}
+
+h1{
+    text-align: center;
+}
+
+.box{
+    display: flex;
+    gap: 10px;
+}
+.addtask{
+    display: flex;
+    gap: 10px;
+}
+
+.addtask input, .addtask button{
+    padding: 10px;
+    width: 200px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.addtask input:focus{
+    border: 1px solid #0260CC;
+    outline: 2px solid #0260CC;
+}
+
+
+.addtask button{
+    width: 100px;
+    background-color: #17A34A;
+    cursor: pointer;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.addtask button:hover{
+    background-color: #0260CC;
+}
+
+.card input{
+    padding: 10px;
+    height: 20px;
+    width: 20px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.card{
+    font-size: 20px;
+}
+
+p{
+    font-size: 18px;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

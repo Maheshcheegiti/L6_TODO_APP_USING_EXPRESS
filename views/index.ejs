@@ -9,20 +9,8 @@
 <body>
     <%- include('header') %>
 
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>DueDate</th>
-            <th>Completed</th>
-        </tr>
-        <% for(var i=0; i<todos.length; i++) { %>
-            <tr>
-                <td><%= todos[i].title %></td>
-                <td><%= todos[i].dueDate %></td>
-                <td><%= todos[i].completed %></td>
-            </tr>
-        <% } %>
-    </table>
-
+    <%- include('todos.ejs') %>
+    
+    <script src="https://kit.fontawesome.com/4d482375c9.js" crossorigin="anonymous"></script>
 </body>
 </html>
