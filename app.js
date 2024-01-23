@@ -1,7 +1,7 @@
 /* eslint-disable object-curly-spacing */
 /* eslint-disable linebreak-style */
 /* eslint-disable quotes */
-/* eslint-disable semi */
+
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
