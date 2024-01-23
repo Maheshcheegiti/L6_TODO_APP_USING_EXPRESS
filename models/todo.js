@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     markAsCompleted() {
       return this.update({ completed: true });
     }
+
+    static showAll() {
+      return this.findAll();
+    }
+
+    static deleteById(id) {
+      return this.destroy({ where: { id } });
+    }
   }
   Todo.init(
     {
@@ -32,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Todo",
-    }
+    },
   );
   return Todo;
 };

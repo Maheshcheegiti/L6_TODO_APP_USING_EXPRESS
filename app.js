@@ -1,14 +1,20 @@
+/* eslint-disable object-curly-spacing */
 /* eslint-disable linebreak-style */
 /* eslint-disable quotes */
 /* eslint-disable semi */
-/* eslint-disable no-unused-vars */
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
 app.use(express.json());
 
-app.get("/todos", (request, response) => {
-  console.log("Todo List");
+app.get("/todos", async (request, response) => {
+  try {
+    const todos = await Todo.showAll();
+    return response.json(todos);
+  } catch (error) {
+    console.log(error);
+    return response.status(500).json(error);
+  }
 });
 
 app.post("/todos", async (request, response) => {
@@ -37,8 +43,14 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
   }
 });
 
-app.delete("/todos/:id", (request, response) => {
-  console.log("deleting a todo", request.params.id);
+app.delete("/todos/:id", async (request, response) => {
+  try {
+    const todo = await Todo.deleteById(request.params.id);
+    return response.json(todo);
+  } catch (error) {
+    console.log(error);
+    return response.status(500).json(error);
+  }
 });
 
 module.exports = app;
