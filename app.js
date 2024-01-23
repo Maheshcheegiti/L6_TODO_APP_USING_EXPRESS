@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 /* eslint-disable object-curly-spacing */
 /* eslint-disable linebreak-style */
 /* eslint-disable quotes */
