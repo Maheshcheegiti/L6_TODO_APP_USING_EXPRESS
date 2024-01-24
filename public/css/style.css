@@ -157,3 +157,17 @@ span{
     margin: 10px 0;
     align-self: center;
 }
+
+li{
+    list-style: none;
+    color: red;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.width-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

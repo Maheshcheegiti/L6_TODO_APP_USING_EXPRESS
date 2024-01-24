@@ -12,10 +12,16 @@
     <div class="center">
         <div>
             <h2>Sign up as a new user</h2>
+            <% if(messages && messages.error && messages.error.length > 0) { %>
+                <% for(var i=0; i<messages.error.length; i++){ %>
+                    <li><%= messages.error[i] %></li>
+                <% } %>
+            <% } %>
+
             <form action="/session" method="post" class="addtask column">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div><label for="email"><i class="fa-solid fa-envelope"></i></label><input type="email" name="email" placeholder="Email" required></div>
-                <div><label for="password"><i class="fa-solid fa-lock"></i></label><input type="password" name="password" placeholder="Password" required></div>
+                <div><label for="email"><i class="fa-solid fa-envelope"></i></label><input type="email" name="email" placeholder="Email"></div>
+                <div><label for="password"><i class="fa-solid fa-lock"></i></label><input type="password" name="password" placeholder="Password"></div>
                 <button class="right-btn" type="submit">Sign In <i class="fa-solid fa-right-to-bracket"></i></button>
             </form>
         </div>

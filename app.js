@@ -15,6 +15,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
+const flash = require("connect-flash");
 
 const saltRounds = 10;
 
@@ -31,6 +32,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(flash());
+
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
 passport.use(
   new LocalStrategy(
     {
@@ -42,7 +54,7 @@ passport.use(
         await User.findOne({ where: { email } }).then(async (user) => {
           const result = await bcrypt.compare(password, user.password);
           if (!result) {
-            return done("Invalid password");
+            return done(null, false, { message: "Invalid password." });
           }
           return done(null, user);
         });
@@ -67,10 +79,6 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-app.set("view engine", "ejs");
-
-app.use(express.static(path.join(__dirname, "public")));
-
 app.get("/", async (request, response) => {
   response.render("index", {
     csrfToken: request.csrfToken(),
@@ -82,25 +90,50 @@ app.get("/signup", (request, response) => {
 });
 
 app.post("/users", async (request, response) => {
-  const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+  const firstName = request.body.firstName;
+  const lastName = request.body.lastName;
+  const email = request.body.email;
+  const password = request.body.password;
 
+  if (firstName.length < 3) {
+    request.flash("error", "First name should be atleast 3 characters long");
+  }
+
+  if (lastName.length < 3) {
+    request.flash("error", "Last name should be atleast 3 characters long");
+  }
+
+  // validate email
+  const emailRegex = /\S+@\S+\.\S+/;
+  if (!emailRegex.test(email)) {
+    request.flash("error", "Invalid email");
+  }
+
+  if (password.length < 8) {
+    request.flash("error", "Password should be atleast 8 characters long");
+    return response.redirect("/signup");
+  }
+
+  const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
   try {
     const user = await User.create({
-      firstName: request.body.firstName,
-      lastName: request.body.lastName,
-      email: request.body.email,
+      firstName,
+      lastName,
+      email,
       password: hashedPassword,
     });
 
     request.login(user, (error) => {
       if (error) {
-        return response.status(500).json(error);
+        request.flash("error", "Error while logging in");
+        return response.redirect("/login");
       }
       return response.redirect("/todos");
     });
   } catch (error) {
     console.log(error);
-    return response.status(500).json(error);
+    request.flash("error", "Email already exists or Some error occured");
+    return response.redirect("/signup");
   }
 });
 
@@ -119,9 +152,12 @@ app.get("/signout", (request, response, next) => {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
-  (request, response) => {
-    return response.redirect("/todos");
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
+  function (request, response) {
+    response.redirect("/todos");
   },
 );
 
@@ -152,10 +188,21 @@ app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
+    const title = request.body.title;
+    const dueDate = request.body.dueDate;
+
+    if (title.length < 5) {
+      request.flash("error", "length of title should be greater than 5");
+    }
+    if (dueDate.length < 1) {
+      request.flash("error", "Due date cannot be empty");
+      return response.redirect("/todos");
+    }
+
     try {
       await Todo.addTodo({
-        title: request.body.title,
-        dueDate: request.body.dueDate,
+        title,
+        dueDate,
         completed: false,
         userId: request.user.id,
       });
@@ -163,7 +210,10 @@ app.post(
       return response.redirect("/todos");
     } catch (error) {
       console.log(error);
-      return response.status(500).json(error);
+
+      request.flash("error", "length of title should be greater than 5");
+
+      return response.redirect("/todos");
     }
   },
 );
