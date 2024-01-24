@@ -9,15 +9,19 @@ const { Todo } = require("./models");
 const path = require("path");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async (request, response) => {
+  const overDue = await Todo.overDue();
+  const dueToday = await Todo.dueToday();
+  const dueLater = await Todo.dueLater();
   const todos = await Todo.showAll();
   if (request.accepts("html")) {
-    return response.render("index", { todos });
+    return response.render("index", { overDue, dueToday, dueLater });
   } else {
     return response.json(todos);
   }
@@ -35,13 +39,13 @@ app.get("/todos", async (request, response) => {
 
 app.post("/todos", async (request, response) => {
   try {
-    const todo = await Todo.addTodo({
+    await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
       completed: false,
     });
 
-    return response.json(todo);
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(500).json(error);

@@ -11,7 +11,24 @@ h1{
 .box{
     display: flex;
     gap: 10px;
+    transition: all 0.3s ease;
+    padding: 5px;
+    width: fit-content;
+    border-radius: 5px;
+    align-items: center;
+    cursor: pointer;
 }
+
+.s-box{
+    padding: 5px;
+}
+
+
+.box:hover{
+    background-color: rgb(203, 233, 243);
+    cursor: pointer;
+}
+
 .addtask{
     display: flex;
     gap: 10px;
@@ -36,7 +53,7 @@ h1{
     background-color: #17A34A;
     cursor: pointer;
     color: white;
-    border: none;
+    border-color: #17A34A;
     transition: all 0.3s ease;
 }
 
@@ -57,12 +74,40 @@ h1{
     font-size: 20px;
 }
 
-p{
+.list{
+    position: relative;
+}
+
+span{
     font-size: 18px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    background: lightgray;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    border-radius: 5px;
 }
 
 .center{
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
+
+.fa-trash{
+    color: rgb(200, 33, 33);
+    cursor: pointer;
+}
+
+.box #icon{
+   opacity: 0;
+   transition: all 0.3s ease;
+}
+
+.box:hover  #icon{
+    opacity: 1;
+}
+
