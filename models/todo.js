@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
-    static deleteById(id) {
+    static async deleteById(id) {
       return this.destroy({ where: { id } });
     }
 

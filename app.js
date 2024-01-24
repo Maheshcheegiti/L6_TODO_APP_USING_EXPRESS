@@ -4,12 +4,16 @@
 /* eslint-disable quotes */
 
 const express = require("express");
+const csrf = require("csurf");
+const cookieparser = require("cookie-parser");
 const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieparser("secret string"));
+app.use(csrf({ cookie: true }));
 
 app.set("view engine", "ejs");
 
@@ -19,11 +23,15 @@ app.get("/", async (request, response) => {
   const overDue = await Todo.overDue();
   const dueToday = await Todo.dueToday();
   const dueLater = await Todo.dueLater();
-  const todos = await Todo.showAll();
   if (request.accepts("html")) {
-    return response.render("index", { overDue, dueToday, dueLater });
+    return response.render("index", {
+      overDue,
+      dueToday,
+      dueLater,
+      csrfToken: request.csrfToken(),
+    });
   } else {
-    return response.json(todos);
+    return response.json({ overDue, dueToday, dueLater });
   }
 });
 
