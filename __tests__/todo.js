@@ -17,6 +17,16 @@ function extractCsrfToken(res) {
   return $("[name=_csrf]").val();
 }
 
+const login = async (agent, email, password) => {
+  let res = await agent.get("/login");
+  const crsfToken = extractCsrfToken(res);
+  res = await agent.post("/session").send({
+    email,
+    password,
+    _csrf: crsfToken,
+  });
+};
+
 describe("Todo test suite", () => {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
@@ -42,7 +52,18 @@ describe("Todo test suite", () => {
     expect(response.status).toBe(302);
   });
 
-  test("responds with json at /todos", async () => {
+  test("Signout", async () => {
+    let res = await agent.get("/todos");
+    expect(res.status).toBe(200);
+    res = await agent.get("/signout");
+    expect(res.status).toBe(302);
+    res = await agent.get("/todos");
+    expect(res.status).toBe(302);
+  });
+
+  test("creating a new todo", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
     const res = await agent.get("/todos");
     const crsfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
@@ -55,6 +76,8 @@ describe("Todo test suite", () => {
   });
 
   test("Mark a todo as completed", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
     let res = await agent.get("/todos");
     let crsfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
@@ -89,6 +112,8 @@ describe("Todo test suite", () => {
   });
 
   test("Marks as incompleted", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
     let res = await agent.get("/todos");
     let crsfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
@@ -123,6 +148,8 @@ describe("Todo test suite", () => {
   });
 
   test("Delete a todo", async () => {
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
     let res = await agent.get("/todos");
     let crsfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
@@ -153,7 +180,8 @@ describe("Todo test suite", () => {
   });
 
   test("Get all todos", async () => {
-    // test like get prevcount and add one check count
+    const agent = request.agent(server);
+    await login(agent, "user.a@test.com", "12345678");
     let res = await agent.get("/todos");
     let crsfToken = extractCsrfToken(res);
     const groupedTodosResponse = await agent
