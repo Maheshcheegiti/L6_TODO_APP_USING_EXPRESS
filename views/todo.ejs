@@ -1,0 +1,17 @@
+<div class="list">
+    <h2><%= title %></h2>
+    <div class="card">
+        <% for (var i = 0; i < data.length; i++) { %>
+            <div class="box">
+                <div><input id="todo-checkbox-<%= data[i].id %>" <%= data[i].completed ? "checked" : "" %> onclick="updateTodo(<%= data[i].id %>)"  type="checkbox"></div>
+                <div><label for="todo-checkbox-<%= data[i].id %>"><%= data[i].title %></label></div>
+                <div>
+                    <a href="#" onclick="deleteTodo(<%= data[i].id %>)">
+                        <i id="icon" class="fa-solid fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    <span><%= data.length %></span>
+</div>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <div class="center">
+        <div>
+            <h2>Sign up as a new user</h2>
+            <form action="/session" method="post" class="addtask column">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div><label for="email"><i class="fa-solid fa-envelope"></i></label><input type="email" name="email" placeholder="Email" required></div>
+                <div><label for="password"><i class="fa-solid fa-lock"></i></label><input type="password" name="password" placeholder="Password" required></div>
+                <button class="right-btn" type="submit">Sign In <i class="fa-solid fa-right-to-bracket"></i></button>
+            </form>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/4d482375c9.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,17 +1,81 @@
-<div class="list">
-    <h2><%= title %></h2>
-    <div class="card">
-        <% for (var i = 0; i < data.length; i++) { %>
-            <div class="box">
-                <div><input id="todo-checkbox-<%= data[i].id %>" <%= data[i].completed ? "checked" : "" %> onclick="updateTodo(<%= data[i].id %>)"  type="checkbox"></div>
-                <div><label for="todo-checkbox-<%= data[i].id %>"><%= data[i].title %></label></div>
-                <div>
-                    <a href="#" onclick="deleteTodo(<%= data[i].id %>)">
-                        <i id="icon" class="fa-solid fa-trash"></i>
-                    </a>
-                </div>
-            </div>
-        <% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script>
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        function updateTodo (id) {
+            var completedStatus = document.querySelector(`#todo-checkbox-${id}`).checked;
+            fetch(`/todos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    completed: completedStatus,
+                    _csrf: token
+                })
+            }).then(res => {
+                if(res.ok) {
+                    window.location.reload();
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+
+        function deleteTodo (id) {
+            fetch(`/todos/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    _csrf: token
+                })
+            }).then(res => {
+                if(res.ok) {
+                    window.location.reload();
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+
+    </script>
+</head>
+<body>
+    <div class="center">
+        <div class="j-btw">
+            <%- include('header') %>
+            <a  class="btn" href="/signout">Sign Out <i class="fa-solid fa-right-to-bracket"></i></a>
+        </div>
     </div>
-    <span><%= data.length %></span>
-</div>
+    <div class="center">
+       <div>
+        
+        <form action="/todos" method="post">
+            <div class="addtask">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div><input type="text" name="title" placeholder="What's next?" required></div>
+                <div><input type="date" name="dueDate" required></div>
+                <div><button type="submit">Add</button></div>
+            </div>
+        </form>
+    
+        <div>
+            <%- include('todo.ejs',{title: "Over Due", data: overDue}) %>
+            <%- include('todo.ejs',{title: "Due Today", data: dueToday}) %>
+            <%- include('todo.ejs',{title: "Due Later", data: dueLater}) %>
+            <%- include('todo.ejs',{title: "Completed Items", data: completedTasks}) %>
+        </div>
+       </div>
+    </div>
+    
+    <script src="https://kit.fontawesome.com/4d482375c9.js" crossorigin="anonymous"></script>
+</body>
+</html>

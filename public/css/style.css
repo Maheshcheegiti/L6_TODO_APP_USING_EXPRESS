@@ -33,7 +33,7 @@ h1{
     gap: 10px;
 }
 
-.addtask input, .addtask button{
+.addtask input, .addtask button, .btn{
     padding: 10px;
     width: 200px;
     border: 1px solid grey;
@@ -47,7 +47,7 @@ h1{
 }
 
 
-.addtask button{
+.addtask button, .btn{
     width: 100px;
     background-color: #17A34A;
     cursor: pointer;
@@ -56,7 +56,37 @@ h1{
     transition: all 0.3s ease;
 }
 
-.addtask button:hover{
+.btn{
+    display: inline-block;
+    line-height: 40px;
+    height: 40px;
+    padding: 0 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.abs-right{
+    position: absolute;
+    right: 0;
+}
+
+.buttons{
+    position: relative;
+}
+
+.j-btw{
+    display: flex;
+    width: 570px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttons p{
+    margin: 20px 0;
+    line-height: 40px;
+}
+
+.addtask button:hover, .btn:hover{
     background-color: #0260CC;
 }
 
@@ -110,3 +140,20 @@ span{
     opacity: 1;
 }
 
+.column{
+    flex-direction: column;
+}
+
+.addtask label{
+    color: #17A34A;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+}
+
+.right-btn{
+    margin: 10px 0;
+    align-self: center;
+}

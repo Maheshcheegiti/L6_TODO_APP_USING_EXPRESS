@@ -6,72 +6,16 @@
     <meta name="csrf-token" content="<%= csrfToken %>">
     <title>To-Do App</title>
     <link rel="stylesheet" href="./css/style.css">
-    <script>
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        function updateTodo (id) {
-            var completedStatus = document.querySelector(`#todo-checkbox-${id}`).checked;
-            fetch(`/todos/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    completed: completedStatus,
-                    _csrf: token
-                })
-            }).then(res => {
-                if(res.ok) {
-                    window.location.reload();
-                }
-            }).catch(err => {
-                console.log(err);
-            })
-        }
-
-        function deleteTodo (id) {
-            fetch(`/todos/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    _csrf: token
-                })
-            }).then(res => {
-                if(res.ok) {
-                    window.location.reload();
-                }
-            }).catch(err => {
-                console.log(err);
-            })
-        }
-
-    </script>
 </head>
 <body>
     <%- include('header') %>
-
     <div class="center">
-       <div>
-        
-        <form action="/todos" method="post">
-            <div class="addtask">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div><input type="text" name="title" placeholder="What's next?"></div>
-                <div><input type="date" name="dueDate"></div>
-                <div><button type="submit" class="btn">Add</button></div>
-            </div>
-        </form>
-    
-        <div>
-            <%- include('todos.ejs',{title: "Over Due", data: overDue}) %>
-            <%- include('todos.ejs',{title: "Due Today", data: dueToday}) %>
-            <%- include('todos.ejs',{title: "Due Later", data: dueLater}) %>
-            <%- include('todos.ejs',{title: "Completed Items", data: completedTasks}) %>
+        <div class="buttons">
+            <h2>Welcome to the To-Do Manager</h2>
+            <p>New here? <a class="btn abs-right" href="/signup">Sign Up</a></p>
+            <p>Already have an account? <a class="btn abs-right" href="/login">Sign In</a></p>
         </div>
-       </div>
     </div>
-    
     <script src="https://kit.fontawesome.com/4d482375c9.js" crossorigin="anonymous"></script>
 </body>
 </html>
